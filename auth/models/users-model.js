@@ -19,8 +19,11 @@ users.methods.generateToken = function() {
         username: this.username,
         
     }
+    let options = {
+        expiresIn: 60
+    }
     // turns user into an object
-    let token = jsonToken.sign(tokenObj, process.env.SECRET)
+    let token = jsonToken.sign(tokenObj, process.env.SECRET, options)
     return token;
 }
 

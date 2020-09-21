@@ -1,9 +1,10 @@
 'use strict';
 
 const express = require('express')
-const base64 = require('base-64');
+
+const basicAuth = require('../middleware/basic');
+const bearer = require('../middleware/bearer');
 const users = require('../models/users-model')
-const basicAuth = require('../middleware/basic')
 
 
 const router = express.Router();
@@ -46,4 +47,10 @@ router.post('/signin', basicAuth,(req, res, next)=>{
  res.status(200).json(output)
  })
  
+ router.get('/users',bearer, async (req, res, next)=>{
+     const userList = await users.find({});
+     res.set('auth',req.token);
+     res.status(200).json(userList);
+    
+ })
  module.exports = router;
