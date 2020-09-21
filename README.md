@@ -57,4 +57,5 @@ The following dependencies will install following step 1.
 
 
 # UML
-[Lab13 UML](./assets/uml13.md)
+- [Lab12b Bearer](./assets/bearer.md)
+- [Lab13 UML](./assets/uml13.md)
