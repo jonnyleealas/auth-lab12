@@ -13,8 +13,8 @@ module.exports = (req, res, next)=>{
     users.authWithToken(token)
     .then(validUser => {
         req.user = validUser;
-        req.token = token;
-        console.log(req.user, req.token)
+        req.token = validUser.generateToken();
+        
         next();
     })
     .catch(err => next('invalid login'))

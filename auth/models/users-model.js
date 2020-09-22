@@ -3,9 +3,14 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const jsonToken = require('jsonwebtoken');
+
+const usedTokens = new Set();
 const users = mongoose.Schema({
     username: { type: String, required: true },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    email: { type: String },
+    role: { type: String, require: true, default: 'user', enum: ['admin', 'editor', 'user'] }
+
 })
 
 users.pre('save', async function () {
@@ -19,8 +24,11 @@ users.methods.generateToken = function() {
         username: this.username,
         
     }
+    let options = {
+        expiresIn: 60
+    }
     // turns user into an object
-    let token = jsonToken.sign(tokenObj, process.env.SECRET)
+    let token = jsonToken.sign(tokenObj, process.env.SECRET, options)
     return token;
 }
 
@@ -33,10 +41,15 @@ users.statics.validateBasic = async function (username, password){
 }
 
 users.statics.authWithToken = function (token) {
-    let parsedToken = jsonToken.verify(token, process.env.SECRET);
-    
-    console.log('Parsed Token:',parsedToken)
-    return this.findOne({ username: parsedToken.username})
+    if(usedTokens.has(token)){
+        Promise.reject('Invalid TOken')
+    } else {
+        let parsedToken = jsonToken.verify(token, process.env.SECRET);
+        usedTokens.add(token)
+        
+        console.log('Parsed Token:',parsedToken)
+        return this.findOne({ username: parsedToken.username})
+    }
   }
   
 
