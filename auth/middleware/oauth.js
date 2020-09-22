@@ -3,7 +3,7 @@
 const superagent = require('superagent');
 const users = require('../models/users-model')
 
-
+// Everything here comes from dotenv file.
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const TOKEN_SERVER = process.env.TOKEN_SERVER;
@@ -36,6 +36,8 @@ module.exports = async (req,res,next)=>{
   next()
   } catch (e) { next(`Error: ${e.message}`); }
 };
+
+
 // Give it the code and it gets token @access_token same as the github access url
 async function exchangeCodeForToken(code){
   let tokenResponse = await superagent.post(TOKEN_SERVER)
@@ -52,7 +54,7 @@ async function exchangeCodeForToken(code){
   return access_token
 
 }
-
+// this get the user information from github
 async function getRemoteUser(token){
 let userResponse = await superagent.get(REMOTE_API)
   .set('user-agent', 'express-server')
@@ -60,7 +62,7 @@ let userResponse = await superagent.get(REMOTE_API)
   let user = userResponse.body
   return user;
 }
-
+//This saves new token using mongo
 async function getLocalUser(remoteUser) {
   let obj = {
     username: remoteUser.login,
