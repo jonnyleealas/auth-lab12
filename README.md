@@ -55,7 +55,6 @@ The following dependencies will install following step 1.
 
 
 
-
 # UML
 - [Lab12b Bearer UML](./assets/bearer.md)
 - [Lab12b OAuth UML](./assets/oauth.md)
