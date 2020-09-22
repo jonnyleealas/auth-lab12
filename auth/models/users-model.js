@@ -7,7 +7,10 @@ const jsonToken = require('jsonwebtoken');
 const usedTokens = new Set();
 const users = mongoose.Schema({
     username: { type: String, required: true },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    email: { type: String },
+    role: { type: String, require: true, default: 'user', enum: ['admin', 'editor', 'user'] }
+
 })
 
 users.pre('save', async function () {
