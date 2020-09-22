@@ -18,8 +18,8 @@ module.exports = async (req,res,next)=>{
   console.log('(2)', remoteToken)
 
 //   // Get user info from GitHub
-  // let remoteUser = await getRemoteUser(remoteToken);
-  // console.log('(3)', remoteUser);
+  let remoteUser = await getRemoteUser(remoteToken);
+  console.log('(3)', remoteUser);
   // Connect that with our database
 
   // let localUser = await getLocalUser(remoteUser.login)
@@ -45,9 +45,16 @@ async function exchangeCodeForToken(code){
   return access_token
 
 }
-// async function getRemoteUser(token){
+async function getRemoteUser(token){
+let userResponse = await superagent.get(REMOTE_API)
+  .set('user-agent', 'express-server')
+  .set('Authorization', `token ${token}`)
+  let user = userResponse.body
+  return user;
+}
 
-// }
+
+
 // async function getLocalUser(){
 
 // }
