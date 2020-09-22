@@ -2,7 +2,7 @@
 
 const express = require('express');
 const cors = require('cors');
-
+const oauth = require('./auth/middleware/oauth')
 const basicAuth = require('./auth/middleware/basic');
 const authRouter = require('./auth/routes/auth-router');
 const testRoutes = require('./test-routes');
@@ -19,6 +19,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(authRouter);
 app.use(testRoutes);
 
+app.get('/oauth', oauth, (req,res)=>{
+    res.status(200).send('Github Oauth Ok')
+})
 
 // 404 not found handler
 app.use('*', ( req, res, next)=>{
@@ -28,6 +31,8 @@ app.use('*', ( req, res, next)=>{
 app.get('/secretstuff', basicAuth, (req, res)=>{
     res.send('hi')
 })
+
+
 module.exports ={
     app,
     start: (port)=> app.listen(port, console.log('up on', port))
