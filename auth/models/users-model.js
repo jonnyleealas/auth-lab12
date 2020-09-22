@@ -3,6 +3,8 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const jsonToken = require('jsonwebtoken');
+
+const usedTokens = new Set();
 const users = mongoose.Schema({
     username: { type: String, required: true },
     password: { type: String, required: true }
@@ -36,10 +38,15 @@ users.statics.validateBasic = async function (username, password){
 }
 
 users.statics.authWithToken = function (token) {
-    let parsedToken = jsonToken.verify(token, process.env.SECRET);
-    
-    console.log('Parsed Token:',parsedToken)
-    return this.findOne({ username: parsedToken.username})
+    if(usedTokens.has(token)){
+        Promise.reject('Invalid TOken')
+    } else {
+        let parsedToken = jsonToken.verify(token, process.env.SECRET);
+        usedTokens.add(token)
+        
+        console.log('Parsed Token:',parsedToken)
+        return this.findOne({ username: parsedToken.username})
+    }
   }
   
 
